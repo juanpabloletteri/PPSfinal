@@ -10,6 +10,9 @@ require_once './clases/cursada.php';
 require_once './clases/comision.php';
 require_once './clases/materia.php';
 require_once './clases/curso.php';
+require_once './clases/asistencia.php';
+require_once './clases/archivo.php';
+require_once './clases/encuesta.php';
 
 
 $config['displayErrorDetails'] = true;
@@ -36,6 +39,10 @@ echo materia::TraerTodasLasMaterias();*/
 $app = new \Slim\App(["settings" => $config]);
 
 //GET PARA DISTINTOS TIPOS DE USUARIOS
+$app->get('/todoslosUsuarios',function ($request,$response){
+    $response->write(usuario::TraerTodos());
+    return $response;
+});
 $app->get('/todoslosAlumnos',function ($reuqest,$response){
     $response->write(usuario::TraerAlumnos());
     return $response;
@@ -104,6 +111,60 @@ $app->post('/altaAdmin',function($request,$response){
     $sexo = $datos['sexo'];
     $response->write(usuario::AgregarAdmin($nombre,$apellido,$dni,$mail,$sexo));
 });
+/*******************************************
+ * *****************************
+ *BAJA USUARIO*/
+$app->post('/bajaUsuario',function($request,$response){
+    $datos = $request->getParsedBody();
+    $id_usuario = $datos['idUsuario'];
+    $response->write(usuario::BajaUsuario($id_usuario));
+
+    return $response;
+});
+/*******************************************
+ * *****************************
+ *MODIFICACIONES USUARIO*/
+$app->post('/CambiarPassword',function($request,$response){
+    $datos = $request->getParsedBody();
+    $id = $datos['id'];
+    $pw = $datos['pw'];
+    $response->write(usuario::ActualizarPassword($id,$pw));
+    return $response;
+});
+$app->post('/modificarUsuario',function($request,$response){
+    $datos = $request->getParsedBody();
+    $id = $datos['id'];
+    $nombre = $datos['nombre'];
+    $apellido = $datos['apellido'];
+    $dni = $datos['dni'];
+    $mail = $datos['mail'];
+    $response->write(usuario::modificarUsuario($id,$nombre,$apellido,$dni,$mail));
+
+    return $response;
+});
+$app->post('/guardarImagenUsuario',function($request,$response){
+    $datos = $request->getParsedBody();
+    $id = $datos['id'];
+    $foto = $datos['foto'];
+    $response->write(usuario::subirFoto($foto,$id));
+
+    return $response;
+});
+$app->post('/imagenUsuario',function($request,$response){
+    $datos = $request->getParsedBody();
+    $id = $datos['id'];
+    $response->write(usuario::TraerFotoPorId($id));
+
+    return $response;
+});
+$app->post('/restablecerPass',function($request,$response){
+    $datos = $request->getParsedBody();
+    $id = $datos['id'];
+    $pass = $datos['pass'];
+    $response->write(usuario::restablecerPass($id,$pass));
+
+    return $response;
+});
 //******************************/
 
 /*
@@ -131,11 +192,46 @@ $app->get('/traerTodasLasMaterias',function($request,$response){
 ****************************************************************************************************************************************************************
 ****************************************  CURSOS ****************************************
 */
-$app->get('/traerCursosPorDia',function($request,$response){
+$app->post('/altaCurso',function($request,$response){
+    $datos = $request->getParsedBody();
+    $aula = $datos['aula'];
+    $materia = $datos['materia'];
+    $comision = $datos['comision'];
+    $profesor = $datos['profesor'];
+    $response->write(curso::AgregarCurso($aula,$materia,$comision,$profesor));
+
+    return $response;
+});
+$app->post('/agregarAlumnosCurso',function ($request,$response){
+    $datos = $request->getParsedBody();
+    $idAlumno = $datos['idAlumno'];
+    $response->write(curso::AgregarDetalleCurso($idAlumno));
+
+    return $response;
+});
+$app->get('/traerUltimoCurso',function($request,$response){
+    $response->write(curso::TraerUltimoCurso());
+
+    return $response;
+});
+$app->get('/traerCursosPorDiaActual',function ($request,$response){
     $fecha = date('N');
     $response->write(curso::TraerCursosPorFecha($fecha));
 
     return $response;
+});
+$app->post('/traerCursosPorDia',function($request,$response){
+    $datos = $request->getParsedBody();
+    $fecha = $datos['dia'];
+    $response->write(curso::TraerCursosPorFecha($fecha));
+
+    return $response;
+});
+$app->post('/traerCursoPorDiaAula',function($request,$response){
+    $datos = $request->getParsedBody();
+    $dia = date('N');
+    $aula = $datos['aula'];
+    $response->write(curso::TraerCursoDiaAula($dia,$aula));
 });
 $app->get('/traerCursos',function($request,$response){
     $response->write(curso::TraerTodosLosCursos());
@@ -160,7 +256,234 @@ $app->post('/traerListaPorCurso',function($request,$response){
 
     return $response;
 });
+/*
+****************************************************************************************************************************************************************
+****************************************  ASISTENCIAS ****************************************
+*/
+$app->get('/estadisticaAsistenciaGlobal',function($request,$response){
+    $response->write(asistencia::EstadisticaAsistenciaGlobal());
 
+    return $response;
+});
+$app->post('/estadisticaAsistenciaPorCurso',function($request,$response){
+    $datos = $request->getParsedBody();
+    $curso = $datos['idCurso'];
+    $response->write(asistencia::EstadisticaAsistenciaPorCurso($curso));
+
+    return $response;
+});
+$app->post('/estadisticaAsistenciaPorAlumno',function($request,$response){
+    $datos = $request->getParsedBody();
+    $alumno = $datos['idAlumno'];
+    $response->write(asistencia::EstadisticaAsistenciaPorAlumno($alumno));
+
+    return $response;
+});
+$app->post('/validarAsistencia',function($request,$response){
+    $datos = $request->getParsedBody();
+    $curso = $datos['idCurso'];
+    $response->write(asistencia::validarAsistencia($curso));
+
+    return $response;
+});
+$app->post('/agregarAsistencia',function($request,$response){
+    $datos = $request->getParsedBody();
+    $curso = $datos['idCurso'];
+    $response->write(asistencia::AgregarAsistencia($curso));
+
+    return $response;
+});
+
+$app->post('/listaPorCurso', function($request,$response){
+    $datos = $request->getParsedBody();
+    $curso = $datos['idCurso'];
+    $response->write(asistencia::TraerListaPorCurso($curso));
+
+    return $response;
+});
+
+$app->post('/agregarDetalleAsistencia',function ($request,$response){
+    $datos = $request->getParsedBody();
+    $idAlumno = $datos['idAlumno'];
+    $response->write(asistencia::AgregarDetalleAsistencia($idAlumno));
+
+    return $response;
+});
+
+$app->post('/updateDetalleAsistencia',function ($request,$response){
+    $datos = $request->getParsedBody();
+    $idAlumno = $datos['idAlumno'];
+    $response->write(asistencia::UpdateDetalleAsistencia($idAlumno));
+
+    return $response;
+});
+
+$app->get('/eliminarAsistencia',function($request,$response){
+    $response->write(asistencia::EliminarAsistencia());
+
+    return $response;
+});
+
+$app->get('/historicoAsistencia',function($request,$response){
+    $response->write(asistencia::ListaHistoriaDeAsistencias());
+
+    return $response;
+});
+
+$app->post('/asistenciaPorId',function($request,$response){
+    $datos = $request->getParsedBody();
+    $idAsist = $datos['idAsist'];
+    $response->write(asistencia::ListaDeAlumnosPorIdAsistencia($idAsist));
+
+    return $response;
+});
+$app->post('/fotoAsistenciaRecuperada',function($request,$response){
+    $datos = $request->getParsedBody();
+    $idAsist = $datos['idAsist'];
+    $response->write(asistencia::UrlFotoAsistencia($idAsist));
+
+    return $response;
+});
+$app->post('/updateFotoAsistencia',function($request,$response){
+    $datos = $request->getParsedBody();
+    $foto = $datos['urlFoto'];
+    $response->write(asistencia::UpdateFotoAsistencia($foto));
+
+    return $response;
+});
+//*********************************************ENCUESTAS***************************************************** */
+//*********************************************ENCUESTAS***************************************************** */
+$app->get('/mostrarEncuestas',function($request,$response){
+    $response->write(encuesta::MostrarEncuestas());
+
+    return $response;
+});
+$app->post('/mostrarEncuestasPorProf',function($request,$response){
+    $datos = $request->getParsedBody();
+    $prof = $datos['idProfesor'];
+    $response->write(encuesta::MostrarEncuestasPorProf($prof));
+
+    return $response;
+});
+$app->post('/mostrarEncuestaPorId',function($request,$response){
+    $datos = $request->getParsedBody();
+    $id_encuesta = $datos['idEncuesta'];
+    $response->write(encuesta::MostrarEncuestaPorId($id_encuesta));
+
+    return $response;
+});
+$app->post('/mostrarDatosEncuestaPorId',function($request,$response){
+    $datos = $request->getParsedBody();
+    $id_encuesta = $datos['idEncuesta'];
+    $response->write(encuesta::MostrarDatosPorEncuestaId($id_encuesta));
+
+    return $response;
+});
+$app->post('/mostrarEncuestasPorAlumno',function($request,$response){
+    $datos = $request->getParsedBody();
+    //$id_encuesta = $datos['idEncuesta'];
+    $id_alumno = $datos['idAlumno'];
+    $response->write(encuesta::MostrarEncuestaDeAlumno($id_alumno));
+
+    return $response;
+});
+$app->post('/cursosPorProfesor',function($request,$response){
+    $datos = $request->getParsedBody();
+    $id_prof = $datos['idProfesor'];
+    $response->write(encuesta::cursosPorProf($id_prof));
+
+    return $response;
+});
+$app->post('/ingresarEncuesta',function($request,$response){
+    $datos = $request->getParsedBody();
+    $curso = $datos['curso'];
+    $nombre = $datos['nombre'];
+    $opcion1 = $datos['opcion1'];
+    $opcion2 = $datos ['opcion2'];
+    $duracion = $datos['duracion'];
+    $response->write(encuesta::agregarEncuesta($curso,$nombre,$opcion1,$opcion2,$duracion));
+
+    return $response;
+});
+$app->post('/updateVotoAlumno',function($request,$response){
+    $datos = $request->getParsedBody();
+    $id_encuesta = $datos['idEncuesta'];
+    $id_alumno = $datos['idAlumno'];
+    $voto = $datos['voto'];
+    $response->write(encuesta::UpdateVotoAlumno($id_encuesta,$id_alumno,$voto));
+
+    return $response;
+});
+$app->post('/updateEstadoEncuesta',function($request,$response){
+    $datos = $request->getParsedBody();
+    $id_encuesta = $datos['idEncuesta'];
+    $response->write(encuesta::UpdateEstadoEncuesta($id_encuesta));
+
+    return $response;
+});
+$app->post('/alumnoQr',function($request,$response){
+    $datos = $request->getParsedBody();
+    $id_alumno = $datos['id_Alumno'];
+    $aula = $datos['aula'];
+    $response->write(curso::AlumnoQr($aula,$id_alumno));
+
+    return $response;
+});
+$app->post('/profesorQr',function($request,$response){
+    $datos = $request->getParsedBody();
+    $id_alumno = $datos['id_Alumno'];
+    $aula = $datos['aula'];
+    $response->write(curso::ProfesorQr($aula,$id_alumno));
+
+    return $response;
+});
+$app->post('/activarEncuestaProfesor',function($request,$response){
+    $datos = $request->getParsedBody();
+    $id_encuesta = $datos['idEncuesta'];
+    $response->write(encuesta::activarEncuestaProfesor($id_encuesta));
+    return $response;
+});
+$app->post('/eliminarEncuesta',function($request,$response){
+    $datos = $request->getParsedBody();
+    $id_encuesta = $datos['idEncuesta'];
+    $response->write(encuesta::eliminarEncuesta($id_encuesta));
+    return $response;
+});
+$app->post('/modificarEncuesta',function($request,$response){
+    $datos = $request->getParsedBody();
+    $id_encuesta = $datos['idEncuesta'];
+    $opcion1 = $datos['opcion1'];
+    $opcion2 = $datos['opcion2'];
+    $response->write(encuesta::modificarEncuesta($id_encuesta,$opcion1,$opcion2));
+    return $response;
+});
+
+
+
+
+
+
+
+//************************************************************************************************** */
+$app->get('/traerArchivos',function($request,$response){
+    $response->write(archivo::TraerArchivos());
+
+    return $response;
+});
+$app->post('/subirArchivo',function($request,$response){
+    $datos = $request->getParsedBody();
+    $titulo = $datos['titulo'];
+    $response->write(archivo::IngresarArchivo($titulo));
+
+    return $response;
+});
+
+
+$app->get('/ultimaAsistencia',function ($request,$response){
+    $response->write(asistencia::UltimaAsistencia());
+
+    return $response;
+});
 
 //require_once "saludo.php";
 //*******************************************************************************
@@ -177,13 +500,7 @@ $app->post('/caca',function($request,$response){
     $response->write(Persona::AgregarUsuario($datos["nombre"],$datos["mail"],$datos["sexo"],$datos["password"]));
 });
 
-//*******************************************************************************
-$app->get('/traerTodasLasPersonas', function($request,$response)
-{
-    $response->getbody()->write(persona::TodasLasPersonas());
-    //$response->getbody()->write("HOLAAA");
-    return $response;
-});
+
 
 $app->get('[/]', function (Request $request, Response $response) {    
     $response->getBody()->write("GET => Bienvenido!!! ,a SlimFramework");
@@ -191,147 +508,15 @@ $app->get('[/]', function (Request $request, Response $response) {
 
 });
 
-$app->post('[/]', function (Request $request, Response $response) {   
-    $response->getBody()->write("POST => Bienvenido!!! ,a SlimFramework");
-    return $response;
 
-});
 
-$app->put('[/]', function (Request $request, Response $response) {  
-    $response->getBody()->write("PUT => Bienvenido!!! ,a SlimFramework");
-    return $response;
 
-});
 
 $app->delete('[/]', function (Request $request, Response $response) {  
     $response->getBody()->write(" DELETE => Bienvenido!!! ,a SlimFramework");
     return $response;
 
 });
-
-
-
-$app->get('/datos/', function (Request $request, Response $response) {     
-    $datos = array('nombre' => 'rogelio','apellido' => 'agua', 'edad' => 40);
-    $newResponse = $response->withJson($datos, 200);  
-    return $newResponse;
-});
-
-$app->post('/datos/', function (Request $request, Response $response) {    
-    $ArrayDeParametros = $request->getParsedBody();
-   // var_dump($ArrayDeParametros);
-    $objeto= new stdclass();
-    $objeto->nombre=$ArrayDeParametros['nombre'];
-    $objeto->apellido=$ArrayDeParametros['apellido'];
-    $objeto->edad=$ArrayDeParametros['edad'];
-    $newResponse = $response->withJson($objeto, 200);  
-    return $newResponse;
-
-});
-
-/* atender todos los verbos de HTTP*/
-$app->any('/cualquiera/[{id}]', function ($request, $response, $args) {
-    
-    var_dump($request->getMethod());
-    $id=$args['id'];
-    $response->getBody()->write("cualquier verbo de ajax parametro: $id ");
-    return $response;
-});
-
-
-
-/* atender algunos los verbos de HTTP*/
-$app->map(['GET', 'POST'], '/mapeado', function ($request, $response, $args) {
-
-      var_dump($request->getMethod());
-     $response->getBody()->write("Solo POST y GET");
-});
-
-
-/* agrupacion de ruta*/
-$app->group('/saludo', function () {
-
-    $this->get('/{nombre}', function ($request, $response, $args) {
-        $nombre=$args['nombre'];
-        $response->getBody()->write("HOLA, Bienvenido <h1>$nombre</h1> a la apirest de 'CDs'");
-    });
-
-     $this->get('/', function ($request, $response, $args) {
-        $response->getBody()->write("HOLA, Bienvenido a la apirest de 'CDs'... ingresá tu nombre");
-    });
- 
-     $this->post('/', function ($request, $response, $args) {      
-        $response->getBody()->write("HOLA, Bienvenido a la apirest por post");
-    });
-     
-});
-
-
-/* agrupacion de ruta y mapeado*/
-$app->group('/usuario/{id:[0-9]+}', function () {
-
-    $this->map(['POST', 'DELETE'], '', function ($request, $response, $args) {
-        $response->getBody()->write("Borro el usuario por p");
-    });
-
-    $this->get('/nombre', function ($request, $response, $args) {
-        $response->getBody()->write("Retorno el nombre del usuario del id ");
-    });
-});
-
-
-
-
-/*LLAMADA A METODOS DE INSTANCIA DE UNA CLASE*/
-$app->group('/persona', function () {   
-
-$this->get('/', \persona::class . ':traerTodos');
-$this->get('/{id}', \persona::class . ':traerUno');
-$this->delete('/{id}', \personacd::class . ':BorrarUno');
-$this->put('/', \persona::class . ':ModificarUno');
-//se puede tener funciones definidas
-/*SUBIDA DE ARCHIVO*/
-$this->post('/', function (Request $request, Response $response) {
-  
-    
-    $ArrayDeParametros = $request->getParsedBody();
-    //var_dump($ArrayDeParametros);
-    $titulo= $ArrayDeParametros['titulo'];
-    $cantante= $ArrayDeParametros['cantante'];
-    $año= $ArrayDeParametros['anio'];
-    
-    $micd = new persona();
-    $micd->titulo=$titulo;
-    $micd->cantante=$cantante;
-    $micd->año=$año;
-    $micd->InsertarElCdParametros();
-
-    $archivos = $request->getUploadedFiles();
-    $destino="./fotos/";
-    //var_dump($archivos);
-    //var_dump($archivos['foto']);
-
-    $nombreAnterior=$archivos['foto']->getClientFilename();
-    $extension= explode(".", $nombreAnterior)  ;
-    //var_dump($nombreAnterior);
-    $extension=array_reverse($extension);
-
-    $archivos['foto']->moveTo($destino.$titulo.".".$extension[0]);
-    $response->getBody()->write("cd");
-
-    return $response;
-
-});
-
-     
-});
-
-
-
-
-
-
-
 
 
 

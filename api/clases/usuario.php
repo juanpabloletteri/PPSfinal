@@ -161,8 +161,28 @@ class usuario{
         }
         return $rta;
     }
+    public static function BajaUsuario($id_usuario){
+        $rta = false;
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->RetornarConsulta ("DELETE FROM `usuarios` WHERE id = :id_usuario");
+        $consulta->bindValue(':id_usuario',$id_usuario);
+        if ($consulta->execute()){
+            $rta = true;
+        }
+        return $rta;
+    }
     //***********************************************TRAER USUARIOS POR TIPO**********************************************************************************************************
     //***********************************************TRAER USUARIOS POR TIPO**********************************************************************************************************/
+    //TRAER TODOS LOS USUARIOS
+    public static function TraerTodos()
+    {
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->RetornarConsulta("SELECT * FROM usuarios");
+        $consulta->execute();
+        $consulta = $consulta->fetchAll(PDO::FETCH_ASSOC);
+        $consulta = json_encode($consulta);
+        return $consulta;
+    }
     //TRAER TODOS LOS ALUMNOS
     public static function TraerAlumnos()
     {       
@@ -269,12 +289,60 @@ class usuario{
     {
         $rta = false;
         $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
-        $consulta = $objetoAccesoDato->RetornarConsulta("UPDATE usuarios SET password = :password WHERE legajo=:legajo");
+        $consulta = $objetoAccesoDato->RetornarConsulta("UPDATE `usuarios` SET `password`=:pw WHERE id=:id");
+        $consulta->bindValue(':id',$id);
+        $consulta->bindValue(':pw',$pw);
         if($consulta->execute()){
             $rta = true;
         }
         return $rta;
     }
-    
+    public static function TraerFotoPorId($id){
+        $rta = false;
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->RetornarConsulta("SELECT foto FROM usuarios WHERE id = :id");
+        $consulta->bindValue(':id',$id);
+        $consulta->execute();
+        $foto = $consulta->fetchAll(PDO::FETCH_ASSOC);
+        $urlFin = $foto[0]['foto'];
+        return $urlFin;
+    }
+    public static function subirFoto($foto,$id){
+        $rta = false;
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->RetornarConsulta("UPDATE `usuarios` SET `foto`=:foto WHERE id=:id");
+        $consulta->bindValue(':foto',$foto);
+        $consulta->bindValue(':id',$id);
+        if($consulta->execute()){
+            $rta = true;
+        }
+        return $rta;
+    }
+    public static function modificarUsuario($id,$nombre,$apellido,$dni,$mail){
+        $rta = false;
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->RetornarConsulta("UPDATE `usuarios` SET `nombre`= :nombre,`apellido`=:apellido,`dni`= :dni,`mail`= :mail 
+                                                        WHERE id = :id");
+        $consulta->bindValue(':id',$id);
+        $consulta->bindValue(':nombre',$nombre);
+        $consulta->bindValue(':apellido',$apellido);
+        $consulta->bindValue(':dni',$dni);
+        $consulta->bindValue(':mail',$mail);
+        if ($consulta->execute()){
+            $rta = true;
+        }
+        return $rta;
+    }
+    public static function restablecerPass($id,$pass){
+        $rta = false;
+        $objetoAccesoDato = AccesoDatos::dameUnObjetoAcceso();
+        $consulta = $objetoAccesoDato->RetornarConsulta("UPDATE `usuarios` SET `password`=:pass WHERE id=:id");
+        $consulta->bindValue(':id',$id);
+        $consulta->bindValue(':pass',$pass);
+        if($consulta->execute()){
+            $rta = true;
+        }
+        return $rta;
+    }
 }
 ?>
