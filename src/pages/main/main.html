@@ -1,0 +1,113 @@
+<ion-header>
+
+  <ion-navbar>
+    <button ion-button menuToggle icon-only>
+      <ion-icon name='menu'></ion-icon>
+    </button>
+    <ion-title>
+      Menu
+    </ion-title>
+  </ion-navbar>
+
+</ion-header>
+<ion-content padding>
+  <ion-list>
+
+    <ion-list *ngIf="libre==1 && tipoUsuario==4" class="libre" (click)="opciones()">
+      ADVERTENCIA {{nombre}} {{apellido}}, estas a punto de quedar libre
+    </ion-list>
+
+    <button *ngIf="tipoUsuario =='1' || tipoUsuario =='3'" ion-item (click)="openPage('abm','4')">
+      ABM Alumno
+    </button>
+
+    <button *ngIf="tipoUsuario =='1'" ion-item (click)="openPage('abm','2')">
+      ABM Profesor
+    </button>
+
+    <button *ngIf="tipoUsuario  =='1' " ion-item (click)="openPage('abm','3')">
+      ABM Administrativo
+    </button>
+
+    <button *ngIf="tipoUsuario  =='3' " ion-item (click)="openPage('asistencia')">
+      Asistencia
+    </button>
+
+    <button *ngIf="tipoUsuario =='1' || tipoUsuario =='3'" ion-item (click)="openPage('excel')">
+      Importar/Descargar Excel
+    </button>
+
+    <button ion-item (click)="openPage('cursadas')">
+      Cursadas
+    </button>
+
+    <button *ngIf="tipoUsuario=='2' || tipoUsuario =='4'" ion-item (click)="openPage('encuesta')">
+      Encuesta
+    </button>
+
+    <button ion-item (click)="openPage('qrs')">
+      Lector QR
+    </button>
+
+    <button ion-item (click)="openPage('descarga')">
+      Descarga
+    </button>
+
+    <button ion-item (click)="openPage('perfil')">
+      Perfil
+    </button>
+
+    <button ion-item (click)="closeMenu()">
+      Close Menu
+    </button>
+
+  </ion-list>
+</ion-content>
+
+<ion-footer>
+  <button *ngIf="tipo=='2'" ion-button full color="secondary" icon-end (click)="EnviarMensaje()">
+    Mensaje de Importancia
+  </button>
+  <button ion-button full color="primary" icon-end (click)="Volver()">
+    Salir
+  </button>
+</ion-footer>
+<!--
+<ion-menu [content]="content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+
+      <button *ngIf="usuario=='admin' || usuario=='administrativo'" ion-item (click)="openPage('abm')">
+        Altas
+      </button>
+      <button ion-item (click)="openPage('asistencia')">
+        Asistencia
+      </button>
+      <button ion-item (click)="openPage('cursadas')">
+        Cursadas
+      </button>
+      <button *ngIf="usuario=='profe'" ion-item (click)="openPage('encuesta')">
+        Encuesta
+      </button>
+      <button ion-item (click)="openPage('qrs')">
+        Lector QR
+      </button>
+      <button ion-item (click)="openPage('descarga')">
+        Descarga
+      </button>
+      <button ion-item (click)="openPage('perfil')">
+        Perfil
+      </button>
+      <button ion-item (click)="closeMenu()">
+        Close Menu
+      </button>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+-->
+<ion-nav id="nav" #content [root]="rootPage"></ion-nav>

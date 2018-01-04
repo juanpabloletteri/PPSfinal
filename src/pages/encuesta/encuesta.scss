@@ -1,0 +1,20 @@
+page-encuesta {
+    .finalizada{
+        background-color: rgba(68, 202, 235, 0.466)
+    }
+    .siVoto{
+        background-color: rgba(255, 36, 36, 0.445)
+    }
+    .noVoto{
+        background-color: rgba(0, 128, 0, 0.479)
+    }
+    .iconSi{
+        color: red;
+    }
+    .iconNo{
+        color: green;
+    }
+    .gris{
+        background-color: gray;
+    }
+}

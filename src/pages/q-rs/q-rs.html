@@ -1,0 +1,73 @@
+<!--
+  Generated template for the QRsPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>QRs</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+  <div *ngIf="tipo == 4|| tipo==2">
+    <button ion-button full (click)="QrAula()">Escanear Aula</button>
+  </div>
+  <div *ngIf="datos!=null">
+    <ion-grid *ngFor="let aux of datos">
+      <ion-row>
+        <ion-col>
+          Comision:{{aux.Comision}}
+        </ion-col>
+        <ion-col>
+          Materia: {{aux.Materia}}
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          Profesor:{{aux.nombre_prof}} {{aux.ape_prof}}
+        </ion-col>
+        <ion-col>
+          Aula: {{aux.aula}}
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+  </div>
+  <div *ngIf="alumnos!=null">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          Legajo
+        </ion-col>
+        <ion-col>
+          Apellido
+        </ion-col>
+        <ion-col>
+          Nombre
+        </ion-col>
+      </ion-row>
+      <div *ngFor="let aux of alumnos">
+        <ion-row>
+          <ion-col>
+            {{aux.legajo}}
+          </ion-col>
+          <ion-col>
+            {{aux.apellido}}
+          </ion-col>
+          <ion-col>
+            {{aux.nombre}}
+          </ion-col>
+        </ion-row>
+      </div>
+    </ion-grid>
+  </div>
+</ion-content>
+<ion-footer>
+  <button ion-button full color="primary" icon-end (click)="Volver()">
+    Volver
+  </button>
+</ion-footer>

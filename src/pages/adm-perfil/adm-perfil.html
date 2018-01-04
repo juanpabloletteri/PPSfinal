@@ -1,0 +1,74 @@
+<!--
+  Generated template for the AdmPerfilPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+    
+      <ion-navbar>
+        <ion-title>AdmPerfil</ion-title>
+      </ion-navbar>
+    
+    </ion-header>
+    
+    
+    <ion-content padding>
+    
+      <ion-card>
+    
+        <!--<img *ngIf="foto==null" src="assets/img/perfil.jpg" width="500" height="200" />-->
+        
+        <img src="{{principioURL}}{{finURL}}"/>
+    
+        <button ion-button  icon-left (click)="fotoDeAula()">
+          <ion-icon name="camera"></ion-icon>
+        </button>
+    
+        <ion-card-content>
+          <ion-card-title>
+            {{nombre}} {{apellido}}
+          </ion-card-title>
+          <p>
+            Datos Perfil
+          </p>
+        </ion-card-content>
+    
+        <ion-item>
+          <ion-icon name='mail' item-start style="color: #d12020"></ion-icon>
+          Mail: {{mail}}
+        </ion-item>
+    
+        <ion-item>
+          <ion-icon name='attach' item-start style="color: #55acee"></ion-icon>
+          Legajo: {{legajo}}
+        </ion-item>
+    
+        <ion-item>
+          <ion-buttons end>
+            <button ion-button outline icon-only (click)="Cambiar()">Cambiar Contraseña
+              <ion-icon name='body' style="color: #43d120"></ion-icon>
+            </button>
+          </ion-buttons>
+        </ion-item>
+        <div *ngIf="cambiar == true">
+          <label>Modificar Password</label>
+          <input type="password" [(ngModel)]="pw1">
+          <label>Reingrese Password</label>
+          <input type="password" [(ngModel)]="pw2">
+          <div *ngIf="pw1 != pw2 || pw1 =='' ">
+              <button ion-button full (click)="CambiarPW(pw1,pw2)" disabled>Confirmar</button>
+          </div>
+          <div *ngIf="pw1 == pw2">
+              <button ion-button full (click)="CambiarPW(pw1,pw2)">Confirmar</button>
+          </div>
+          
+        </div>
+      </ion-card>
+    
+    </ion-content>
+    <ion-footer>
+      <button ion-button full color="primary" icon-end (click)="Volver()">
+        Volver
+      </button>
+    </ion-footer>

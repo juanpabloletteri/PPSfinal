@@ -1,0 +1,23 @@
+page-main {
+    .libre{
+        -webkit-box-sizing: content-box;
+        -moz-box-sizing: content-box;
+        box-sizing: content-box;
+        padding: 10px;
+        border: none;
+        font: normal 16px/1 "Times New Roman", Times, serif;
+        color: black;
+        -o-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        background: -webkit-linear-gradient(0deg, rgba(254,204,177,1) 0, rgba(232,6,93,1) 17%, rgba(241,116,50,1) 43%, rgba(232,6,93,1) 68%, rgba(251,149,94,1) 95%, rgba(251,149,94,1) 100%);
+        background: -moz-linear-gradient(90deg, rgba(254,204,177,1) 0, rgba(232,6,93,1) 17%, rgba(241,116,50,1) 43%, rgba(232,6,93,1) 68%, rgba(251,149,94,1) 95%, rgba(251,149,94,1) 100%);
+        background: linear-gradient(90deg, rgba(254,204,177,1) 0, rgba(232,6,93,1) 17%, rgba(241,116,50,1) 43%, rgba(232,6,93,1) 68%, rgba(251,149,94,1) 95%, rgba(251,149,94,1) 100%);
+        background-position: 50% 50%;
+        -webkit-background-origin: padding-box;
+        background-origin: padding-box;
+        -webkit-background-clip: border-box;
+        background-clip: border-box;
+        -webkit-background-size: auto auto;
+        background-size: auto auto;
+    }
+}

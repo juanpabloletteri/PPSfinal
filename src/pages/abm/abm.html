@@ -1,0 +1,94 @@
+<!--
+  Generated template for the AbmPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <ion-title>ABM</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-item color="danger">
+    <ion-label>Alta/Baja-Modificacion</ion-label>
+    <ion-toggle value="foo" checked="true" [(ngModel)]="AltaBaja"></ion-toggle>
+  </ion-item>
+
+  <div *ngIf="AltaBaja==true">
+    <ion-item no-lines>
+      <ion-label>
+        E-Mail:
+      </ion-label>
+      <ion-input type="email" [(ngModel)]="mail"></ion-input>
+    </ion-item>
+    <ion-item no-lines>
+      <ion-label>
+        Nombre:
+      </ion-label>
+      <ion-input type="text" [(ngModel)]="nombre"></ion-input>
+    </ion-item>
+    <ion-item no-lines>
+      <ion-label>
+        Apellido:
+      </ion-label>
+      <ion-input type="text" [(ngModel)]="apellido"></ion-input>
+    </ion-item>
+    <ion-item no-lines>
+      <ion-label>
+        DNI:
+      </ion-label>
+      <ion-input type="number" [(ngModel)]="dni"></ion-input>
+    </ion-item>
+    <ion-item no-lines>
+      <ion-label>Sexo:</ion-label>
+      <ion-select [(ngModel)]="sexo">
+        <ion-option value="f">Femenino</ion-option>
+        <ion-option value="m">Masculino</ion-option>
+      </ion-select>
+    </ion-item>
+    <ion-item no-lines>
+      <button ion-button full color="secondary" icon-start (click)="Alta()">
+        <ion-icon name='people'></ion-icon>
+        Alta
+      </button>
+    </ion-item>
+
+    <ion-item no-lines>
+      <button *ngIf="tipo==4" ion-button full color="primary" (click)=" AltaConArchivoAlumno()">
+        Alta con archivo
+      </button>
+      <button *ngIf="tipo==2" ion-button full color="primary" (click)=" AltaConArchivoProfesor()">
+        Alta con archivo
+      </button>
+      <button *ngIf="tipo==3" ion-button full color="primary" (click)=" AltaConArchivoAdminsitrativo()">
+        Alta con archivo
+      </button>
+    </ion-item>
+  </div>
+  <table border="1" class="data-table" style="overflow-x:auto;">
+    <th *ngIf="archivo != null && !existe">Nombre</th>
+    <th *ngIf="archivo != null && !existe">Apellido</th>
+    <th *ngIf="archivo != null && !existe">Mail</th>
+    <th *ngIf="archivo != null && !existe">DNI</th>
+    <th *ngIf="archivo != null && !existe">Sexo</th>
+    <tr *ngFor="let row of csvData; let i = index">
+      <td *ngFor="let data of row; let j = index; trackBy: trackByFn">
+        <ion-input type="text" [(ngModel)]="csvData[i][j]"></ion-input>
+      </td>
+    </tr>
+  </table>
+  <div *ngIf="AltaBaja==false">
+    <ion-list *ngFor="let aux of listatodos">
+      <ion-item (click)="menu(aux.id)"> {{aux.nombre}} {{aux.apellido}} </ion-item>
+    </ion-list>
+  </div>
+
+</ion-content>
+
+<ion-footer>
+  <button ion-button full color="primary" icon-end (click)="Volver()">
+    Volver
+  </button>
+</ion-footer>

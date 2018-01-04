@@ -1,0 +1,123 @@
+<!--
+  Generated template for the EncuestaPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Encuesta</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+<ion-content padding>
+  <ion-item *ngIf="tipo =='2'">
+    <ion-label>Crear Encuesta</ion-label>
+    <ion-checkbox color="dark" checked="true" [(ngModel)]="CrearEncuestaSiNO"></ion-checkbox>
+  </ion-item>
+
+  <button ion-button color="danger" icon-end (click)="LeerQr()">
+    Leer QR
+  </button>
+
+  <!-- VISUALIZA ENCUESTAS DEL ALUMNO -->
+  <div *ngIf="tipo==4">
+    <ion-list *ngFor="let aux of encuestasAlumno">
+
+      <ion-item *ngIf="aux.activa==0" class="finalizada" (click)="VerResultado(aux.id_encuesta, aux.nombre_encuesta, aux.opcion1, aux.opcion2)">{{aux.id_encuesta}} {{aux.nombre_encuesta}} (Finalizada)
+        <ion-icon name="checkmark-circle" class="iconNo"></ion-icon>
+      </ion-item>
+
+      <ion-item *ngIf="aux.activa==1 && aux.voto==1" class="siVoto">{{aux.id_encuesta}} {{aux.nombre_encuesta}} (Ya voto)
+        <ion-icon name="close-circle" class="iconSi"></ion-icon>
+      </ion-item>
+
+      <ion-item *ngIf="aux.activa==1 && aux.voto==0" class="noVoto" (click)="Votar(aux.id_encuesta, aux.opcion1, aux.opcion2)">{{aux.id_encuesta}} {{aux.nombre_encuesta}} (Aun no voto)
+        <ion-icon name="checkmark-circle" class="iconNo"></ion-icon>
+      </ion-item>
+
+    </ion-list>
+  </div>
+
+  <!-- VISUALIZA ENCUESTAS DEL PROFESOR -->
+  <div *ngIf="tipo==2 && CrearEncuestaSiNO==false">
+
+    <ion-list *ngFor="let aux of encuestasProfesor">
+
+      <ion-item *ngIf="aux.activa==0 && id==aux.id_profesor" class="finalizada" (click)="MenuEncuesta2(aux.id_encuesta, aux.nombre_encuesta, aux.opcion1, aux.opcion2)">{{aux.id_encuesta}} {{aux.nombre_encuesta}} (Finalizada)
+        <ion-icon name="checkmark-circle" class="iconNo"></ion-icon>
+      </ion-item>
+
+      <ion-item *ngIf="aux.activa==0 && id!=aux.id_profesor" class="gris" (click)="VerResultado(aux.id_encuesta, aux.nombre_encuesta, aux.opcion1, aux.opcion2)">{{aux.id_encuesta}} {{aux.nombre_encuesta}} (Finalizada)
+        <ion-icon name="checkmark-circle" class="iconNo"></ion-icon>
+      </ion-item>
+
+      <ion-item *ngIf="aux.activa==1 && id==aux.id_profesor" class="siVoto" (click)="VerResultado(aux.id_encuesta, aux.nombre_encuesta, aux.opcion1, aux.opcion2)">{{aux.id_encuesta}} {{aux.nombre_encuesta}} (En curso)
+        <ion-icon name="close-circle" class="iconSi"></ion-icon>
+      </ion-item>
+
+      <ion-item *ngIf="aux.activa==1 && id!=aux.id_profesor" class="gris">{{aux.id_encuesta}} {{aux.nombre_encuesta}}
+        <ion-icon name="close-circle" class="iconNo"></ion-icon>
+      </ion-item>
+
+      <ion-item *ngIf="aux.activa==2 && id==aux.id_profesor" class="noVoto" (click)="MenuEncuesta(aux.id_encuesta, aux.nombre_encuesta, aux.opcion1, aux.opcion2)">{{aux.id_encuesta}} {{aux.nombre_encuesta}} (Activar)
+        <ion-icon name="close-circle" class="iconSi"></ion-icon>
+      </ion-item>
+
+    </ion-list>
+  </div>
+
+  <!-- CREACION DE ENCUESTAS PROFESOR -->
+  <ion-list *ngIf="tipo =='2' && CrearEncuestaSiNO==true" inset>
+
+    <ion-item>
+      <ion-label floating>Cursos</ion-label>
+      <ion-select [(ngModel)]="curso" interface="popover">
+        <ion-option [value]='4'>4A</ion-option>
+        <ion-option [value]='33'>4B</ion-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Nombre</ion-label>
+      <ion-input type="text" [(ngModel)]="nombreEncuesta"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Opcion 1</ion-label>
+      <ion-input type="text" [(ngModel)]="op1Nombre"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Opcion 2</ion-label>
+      <ion-input type="text" [(ngModel)]="op2Nombre"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Duracion</ion-label>
+      <ion-input type="number" [(ngModel)]="duracion"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label floating>Tipo</ion-label>
+      <ion-select [(ngModel)]="tipoEncuesta" interface="popover">
+        <ion-option value="radio">Radio</ion-option>
+        <ion-option value="check">Check</ion-option>
+        <ion-option value="texto">Texto</ion-option>
+      </ion-select>
+    </ion-item>
+
+    <button ion-button color="danger" icon-end (click)="CrearEncuesta()">
+      Crear Encuesta
+    </button>
+
+  </ion-list>
+</ion-content>
+
+<ion-footer>
+  <button ion-button full color="primary" icon-end (click)="Volver()">
+    Volver
+  </button>
+</ion-footer>
